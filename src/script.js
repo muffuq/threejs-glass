@@ -39,7 +39,7 @@ gltfLoader.load(
     root.children[0].material = new THREE.MeshPhysicalMaterial({
       metalness: 0.01,
       roughness: 0,
-      transmission: 0.8,
+      transmission: 1,
       transparent: true,
       thickness: 2,
       opacity: 0.7,
@@ -77,7 +77,7 @@ gltfLoader.load(
 const ambientLight = new THREE.AmbientLight(0xffffff, 1);
 // scene.add(ambientLight)
 
-const pointLight = new THREE.PointLight(0xf0efff, 50);
+const pointLight = new THREE.PointLight(0xf0efff, 80);
 pointLight.position.x = 0;
 pointLight.position.y = 1;
 pointLight.position.z = 6;
@@ -108,15 +108,13 @@ function createBackgroundMaterial() {
   const ctx = backCanvas.getContext("2d");
 
   ctx.rect(0, 0, width, height);
-  ctx.fillStyle = "#ffffff";
+  ctx.fillStyle = "#fff";
   ctx.fill();
   ctx.fillStyle = "#000";
-  const fontSize = 180;
-  ctx.font = fontSize + "px sans-serif";
+  ctx.font = "bold 180px 'Unbounded', sans-serif";
   ctx.textAlign = "center";
-  ctx.fillText("İgoaimalathane", 0.5 * width, 0.5 * height);
-  console.log(width)
-
+  ctx.fillText("İgoaimalathane", 0.5 * width, 0.5 * height, width);
+  
   return new THREE.MeshBasicMaterial({
     map: new THREE.CanvasTexture(backCanvas),
   });
@@ -159,7 +157,7 @@ const renderer = new THREE.WebGLRenderer({
 });
 renderer.setSize(sizes.width, sizes.height);
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-
+renderer.antialias = true;
 /**
  * Animate
  */
