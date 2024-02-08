@@ -1,6 +1,7 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
+import {Text} from 'troika-three-text'
 import gsap from "gsap";
 
 // Canvas
@@ -10,7 +11,6 @@ const canvas = document.querySelector("canvas.webgl");
 // Scene
 // Background Color White
 const scene = new THREE.Scene();
-scene.background = new THREE.Color(0x000);
 
 /**
  * Sizes
@@ -72,6 +72,43 @@ gltfLoader.load(
   }
 );
 
+/**
+ * Object
+ */
+
+backCanvas = document.createElement("canvas");
+const backPlaneGeomatry = new THREE.PlaneGeometry(50, 50);
+const material = new THREE.MeshBasicMaterial({
+  color: 0xffffff,
+  side: THREE.DoubleSide,
+});
+const backPlanMesh = new THREE.Mesh(
+  backPlaneGeomatry,
+  material
+);
+backPlanMesh.position.y = -1;
+scene.add(backPlanMesh);
+
+// Text
+
+const text = new Text()
+text.text = 'İgoaimalathane'
+text.fontWeight = 'bold'
+text.fontSize = 2
+text.anchorX = 'center'
+text.anchorY = 'middle'
+text.material = new THREE.MeshBasicMaterial({
+  color: 0x000000, 
+  side: THREE.FrontSide, 
+  depthTest: true,
+  transparent: false
+})
+text.position.z = 0.01
+
+scene.add(text)
+text.sync()
+
+
 // Light
 
 const ambientLight = new THREE.AmbientLight(0xffffff, 1);
@@ -82,43 +119,6 @@ pointLight.position.x = 0;
 pointLight.position.y = 1;
 pointLight.position.z = 6;
 scene.add(pointLight);
-
-// const rectAreaLight = new THREE.RectAreaLight(0xffff, 10, 10, Math.PI * 2, 1, 1)
-// rectAreaLight.position.x = 0
-// rectAreaLight.position.y = 2
-// rectAreaLight.position.z = 3
-// scene.add(rectAreaLight)
-
-/**
- * Object
- */
-
-backCanvas = document.createElement("canvas");
-const backPlaneGeomatry = new THREE.PlaneGeometry(50, 50);
-const backPlanMesh = new THREE.Mesh(
-  backPlaneGeomatry,
-  createBackgroundMaterial()
-);
-backPlanMesh.position.y = -1;
-scene.add(backPlanMesh);
-
-function createBackgroundMaterial() {
-  const width = (backCanvas.width = 3000 * 1.5);
-  const height = (backCanvas.height = 3000);
-  const ctx = backCanvas.getContext("2d");
-
-  ctx.rect(0, 0, width, height);
-  ctx.fillStyle = "#fff";
-  ctx.fill();
-  ctx.fillStyle = "#000";
-  ctx.font = "bold 180px 'Unbounded', sans-serif";
-  ctx.textAlign = "center";
-  ctx.fillText("İgoaimalathane", 0.5 * width, 0.5 * height, width);
-  
-  return new THREE.MeshBasicMaterial({
-    map: new THREE.CanvasTexture(backCanvas),
-  });
-}
 
 window.addEventListener("resize", () => {
   // Update sizes
