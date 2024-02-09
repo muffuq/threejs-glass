@@ -20,7 +20,6 @@ let meshTransmissionMaterialUpdate = () => {};
 
 const params = {
   transparentBG: true,
-  bgColor: new THREE.Color()
 };
 
 /**
@@ -68,7 +67,6 @@ gltfLoader.load(
 
     root.traverse((child) => {
       if (child.isMesh) {
-        console.log(child.name)
         child.material = material;
         child.castShadow = false;
         child.receiveShadow = false;
@@ -106,8 +104,7 @@ gltfLoader.load(
     meshTransmissionMaterialUpdate = () => {
       mtm.time = clock.getElapsedTime();
   
-      for (const mesh of root.children) {
-        const parent = mesh;
+        const parent = root.children[0];
   
         if (mtm.buffer === fboMain.texture) {
           // Save defaults
@@ -137,7 +134,6 @@ gltfLoader.load(
           parent.material = mtm;
           state.gl.toneMapping = oldTone;
         }
-      }
     }
 
     // Mouse Event
@@ -166,7 +162,7 @@ gltfLoader.load(
 
 const backPlaneGeomatry = new THREE.PlaneGeometry(50, 50);
 const material = new THREE.MeshBasicMaterial({
-  color: new THREE.Color('#fffff'),
+  color: new THREE.Color('white'),
   side: THREE.DoubleSide,
   transparent: true,
 });
@@ -252,7 +248,6 @@ const tick = () => {
 
   // Update Material
   meshTransmissionMaterialUpdate();
-  
 
   // Render
   renderer.render(scene, camera);
